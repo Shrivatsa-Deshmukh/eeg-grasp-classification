@@ -1,8 +1,8 @@
 # EEG Grasp Classification
 
-3-class hand grasp motor imagery decoding from scalp EEG using **EEGNet** (Lawhern et al., 2018), applied to the BCI Competition IV 2020 Track 4 dataset.
+3-class hand grasp motor imagery decoding from scalp EEG using **EEGNet**, applied to the BCI Competition IV 2020 Track 4 dataset.
 
-**64.97% accuracy** · 33.33% chance · 5-fold stratified CV · session-to-session evaluation
+**64.97% accuracy**  · session-to-session evaluation
 
 ---
 
@@ -13,9 +13,9 @@
 | | |
 |---|---|
 | **Classes** | Cylindrical · Spherical · Lumbrical grasp |
-| **Subjects** | 15 (S1–S15, right-handed, aged 20–34) |
+| **Subjects** | 15 (right-handed, aged 20–35) |
 | **Trials** | 150 per subject per session (50 per class) |
-| **EEG** | 60 channels, 250 Hz, BrainAmp |
+| **EEG** | 60 channels, 250 Hz|
 | **Analysis window** | Motor imagery phase: 6–10 s → 1000 samples |
 | **Sessions** | 3 sessions per subject, 7 days apart |
 
@@ -55,7 +55,7 @@ Input: (B, 1, 60, 1000)
 | Shallow ConvNet | 63.39 |
 | EEG-Transformer | 64.32 |
 | Multi-Level CNN | 64.59 |
-| **EEGNet (this work)** | **64.97** |
+| **EEGNet** | **64.97** |
 | EEG Conformer | 67.44 |
 
 ---
@@ -73,11 +73,6 @@ Input: (B, 1, 60, 1000)
 
 ---
 
-## Setup
-
-```bash
-pip install -r requirements.txt
-```
 
 Download `sample01.mat` – `sample15.mat` from [osf.io/pq7vb](https://osf.io/pq7vb/) into:
 ```
@@ -87,11 +82,11 @@ data/validation/
 
 ```bash
 # Within-session 5-fold CV
-python train.py --subject 1
+python train.py --subject 
 python train.py --all                         # all 15 subjects pooled
 
-# Cross-session: train day 1 → evaluate day 2
-python train.py --subject 1 --cross_session
+# Cross-session: train day  
+python train.py --subject  --cross_session
 ```
 
 ---
@@ -110,6 +105,4 @@ python train.py --subject 1 --cross_session
 2. Schirrmeister et al. (2017) — Deep learning for EEG decoding. *Human Brain Mapping* 38(11).
 3. Song et al. (2022) — EEG Conformer. *IEEE Trans. Neural Syst. Rehabil. Eng.* 31.
 
----
 
-*Robot Vision · Aug–Dec 2024 · Ankush Desai, Shrivatsa Deshmukh, Prapti Bordoloi*
