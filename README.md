@@ -26,17 +26,17 @@
 EEGNet factorises 2D convolution into three operations that map directly onto EEG signal structure:
 
 ```
-Input: (B, 1, 60, 1000)
+Input: (batch, 1, 60 channels, 1000 time samples)
        │
        ▼  BLOCK 1
-          Temporal Conv (1×125, F1=8, padding='same') + BatchNorm
-          Depthwise Spatial Conv (60×1, D=2) + BatchNorm → ELU → AvgPool(1,4) → Dropout
-          output: (B, 16, 1, 250)
+          Temporal Conv (1×125, F1=8, padding='same') + BatchNorm                       → spectral decomposition
+          Depthwise Spatial Conv (60×1, D=2) + BatchNorm → ELU → AvgPool(1,4)           → Dropout
+          output: (batch, 16, 1, 250)                                                   → learned spatial beamformer
        │
        ▼  BLOCK 2
           Depthwise Conv (1×16, padding='same') + Pointwise Conv (1×1, F2=16)
           BatchNorm → ELU → AvgPool(1,8) → Dropout
-          output: (B, 16, 1, 31)
+          output: (batch, 16, 1, 31)
        │
        ▼  Flatten → Linear(496 → 3)
 ```
