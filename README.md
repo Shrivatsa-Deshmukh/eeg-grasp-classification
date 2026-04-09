@@ -28,19 +28,21 @@ EEGNet factorises 2D convolution into three operations that map directly onto EE
 ```
 Input: (B, 1, 60, 1000)
        │
-       ▼  Temporal Conv (1×125, F1=8, padding='same')     spectral decomposition
-       ▼  BatchNorm
-       ▼  Depthwise Spatial Conv (60×1, D=2)              learned spatial beamformer
-       ▼  BatchNorm → ELU → AvgPool(1,4) → Dropout        output: (B, 16, 1, 250)
+       ▼  BLOCK 1
+          Temporal Conv (1×125, F1=8, padding='same') + BatchNorm
+          Depthwise Spatial Conv (60×1, D=2) + BatchNorm → ELU → AvgPool(1,4) → Dropout
+          output: (B, 16, 1, 250)
        │
-       ▼  Depthwise Conv (1×16, padding='same')           temporal mixing per map
-       ▼  Pointwise Conv (1×1, F2=16)                     cross-map integration
-       ▼  BatchNorm → ELU → AvgPool(1,8) → Dropout        output: (B, 16, 1, 31)
+       ▼  BLOCK 2
+          Depthwise Conv (1×16, padding='same') + Pointwise Conv (1×1, F2=16)
+          BatchNorm → ELU → AvgPool(1,8) → Dropout
+          output: (B, 16, 1, 31)
        │
        ▼  Flatten → Linear(496 → 3)
 ```
 
-**4,043 parameters total.** Max-norm constraints (spatial conv ≤ 1.0, classifier ≤ 0.25) applied after each weight update.
+
+4,043 parameters - kept stable during training via max-norm constraints on the spatial conv (≤ 1.0) and classifier (≤ 0.25).
 
 ---
 
@@ -48,15 +50,17 @@ Input: (B, 1, 60, 1000)
 
 | Model | Accuracy (%) |
 |---|---|
-| CSP + RF / SVM / LDA | 35–36 |
+| CSP + RF / SVM / LDA | 35.36 |
 | Filter Bank CSP | 43.06 |
-| Early Region-Based CNN | 57.34 |
 | Deep ConvNet | 62.58 |
 | Shallow ConvNet | 63.39 |
 | EEG-Transformer | 64.32 |
-| Multi-Level CNN | 64.59 |
-| **EEGNet** | **64.97** |
+| **EEGNet** * | **64.97** |
 | EEG Conformer | 67.44 |
+
+Baseline model accuracies source:
+[Iteratively Calibratable Network for Reliable EEG-Based Robotic Arm Control](https://doi.org/10.1109/tnsre.2024.3434983)
+
 
 ---
 
@@ -89,20 +93,5 @@ python train.py --all                         # all 15 subjects pooled
 python train.py --subject  --cross_session
 ```
 
----
-
-## Limitations
-
-- No bandpass preprocessing (µ/β isolation, 8–30 Hz) prior to the CNN
-- No artifact rejection (eye movements, muscle noise)
-- Within-subject evaluation only — cross-subject generalisation untested
-
----
-
-## References
-
-1. Lawhern et al. (2018) — [EEGNet](https://arxiv.org/abs/1611.08024). *J. Neural Eng.* 15(5).
-2. Schirrmeister et al. (2017) — Deep learning for EEG decoding. *Human Brain Mapping* 38(11).
-3. Song et al. (2022) — EEG Conformer. *IEEE Trans. Neural Syst. Rehabil. Eng.* 31.
 
 
