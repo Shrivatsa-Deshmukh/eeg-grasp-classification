@@ -41,9 +41,6 @@ Input: (batch, 1, 60 channels, 1000 time samples)
        ▼  Flatten → Linear(496 → 3)
 ```
 
-
-4,043 parameters - kept stable during training via max-norm constraints on the spatial conv (≤ 1.0) and classifier (≤ 0.25).
-
 ---
 
 ## Results
