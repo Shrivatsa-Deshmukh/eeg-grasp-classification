@@ -1,4 +1,4 @@
-# EEG Grasp Classification
+# eeg-grasp-classification
 
 3-class hand grasp motor imagery decoding from scalp EEG using **EEGNet**, applied to the BCI Competition IV 2020 Track 4 dataset.
 
